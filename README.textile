@@ -1,0 +1,61 @@
+h1. Getter For
+
+<pre>
+  gem install getter_for
+</pre>
+
+h2. Setup
+
+image you have a ticket model that belongs to a user. you can add convenience methods for any user attribute like that:
+
+<pre>
+  class Ticket < ActiveRecord::Base
+    belongs_to :user
+    
+    getter_for :user => :name
+  end
+  
+  @ticket = Ticket.new
+  @ticket.user_name      # => @ticket.user.name if @ticket.user
+</pre>
+
+That method returns nil if user is nil, so it can safely used in your views
+
+You can pass multiple key, value pairs separated by comma and provide arrays for both modelname and methodname. let me show you:
+
+<pre>
+  class Project < ActiveRecord::Base
+    belongs_to :category
+    belongs_to :user
+    belongs_to :assignee, :class_name => 'User'
+    
+    getter_for [:category, :user] =>  :name,
+                :assignee         => [:email, :phone]
+  end
+  
+  @project = Project.new
+  @project.category_name     # => @project.category.name  if @project.category
+  @project.user_name         # => @project.user.name      if @project.user
+  @project.assignee_email    # => @project.assignee.email if @project.assignee
+  @project.assignee_phone    # => @project.assignee.phone if @project.assignee    
+</pre>
+
+you can also make fancy stuff like:
+
+<pre>
+  class User < ActiveRecord::Base
+    belongs_to :department
+  end
+  
+  class Comment < ActiveRecord::Base
+    belongs_to :user
+    
+    getter_for :user => :department         # => comment.user_department
+    getter_for :user_department => :name    # => comment.user_department_name
+  end
+  
+  @comment = Fancy.new
+  @comment.user_department_name    # => @comment.user.department.name if @comment.user && @comment.user.department
+</pre>
+
+Copyright (c) 2009 Martin Linkhorst, released under the MIT license.

@@ -1,0 +1,5 @@
+* Better Nesting
+* Add Setter
+* Setter callback
+* Customized Setter Method (find_by_name!, find_or_initialize_by_name)
+* Setter & Getter generator
