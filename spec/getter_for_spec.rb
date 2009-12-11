@@ -42,7 +42,7 @@ describe GetterFor do
       }.should raise_error(ArgumentError)
 
       lambda {
-        Model.send :getter_for, { [1, 2] => :attr }
+        Model.send :getter_for, { [:attr, 2] => :attr }
       }.should raise_error(ArgumentError)
     end
     
@@ -67,7 +67,7 @@ describe GetterFor do
       }.should raise_error(ArgumentError)
 
       lambda {
-        Model.send :getter_for, { :attr => [1, 2] }
+        Model.send :getter_for, { :attr => [:attr, 2] }
       }.should raise_error(ArgumentError)      
     end
     
@@ -82,7 +82,7 @@ describe GetterFor do
     end
     
     it "should return the user's name" do
-      ticket = Ticket.new; user = Object.new
+      ticket, user = Ticket.new, Object.new
       user.expects(:name).returns('Han Solo')
       ticket.expects(:user).twice.returns(user)
       ticket.user_name.should == 'Han Solo'      
@@ -95,7 +95,7 @@ describe GetterFor do
     end
     
     it "should raise an error if user does not respond to :name" do
-      ticket = Ticket.new; user = Object.new
+      ticket, user = Ticket.new, Object.new
       ticket.expects(:user).twice.returns(user)
       lambda {
         ticket.user_name
@@ -108,7 +108,7 @@ describe GetterFor do
     end
 
     it "should accept strings" do
-      product = Product.new; manufactory = Object.new
+      product, manufactory = Product.new, Object.new
       manufactory.expects(:name).returns('Death Star')
       product.expects(:manufactory).twice.returns(manufactory)
       product.manufactory_name.should == 'Death Star'      
@@ -125,23 +125,25 @@ describe GetterFor do
       issue.should respond_to(:assignee_email)      
     end
 
-    class Product
+    class Package
       include GetterFor
-      getter_for :provider => [:name, :email]
-      getter_for [:category, :buyer] => :name
+      getter_for :carrier => [:name, :email]
+      getter_for [:category, :sender] => :name
       getter_for [:location, :destination] => [:name, :description]
+      def initialize; yield self; end
     end
 
     it "should accept collection of keys and values" do
-      product = Product.new
-      product.should respond_to(:provider_name)
-      product.should respond_to(:provider_email)
-      product.should respond_to(:category_name)
-      product.should respond_to(:buyer_name)
-      product.should respond_to(:location_name)
-      product.should respond_to(:location_description)
-      product.should respond_to(:destination_name)
-      product.should respond_to(:destination_description)                  
+      Package.new do |p|
+        p.should respond_to(:carrier_name)
+        p.should respond_to(:carrier_email)
+        p.should respond_to(:category_name)
+        p.should respond_to(:sender_name)
+        p.should respond_to(:location_name)
+        p.should respond_to(:location_description)
+        p.should respond_to(:destination_name)
+        p.should respond_to(:destination_description)
+      end
     end
     
     class Fancy
@@ -150,7 +152,7 @@ describe GetterFor do
     end
     
     it "should work fancy" do
-      fancy = Fancy.new; name = Object.new
+      fancy, name = Fancy.new, Object.new
       name.expects(:downcase).returns('han solo')
       fancy.expects(:user_name).twice.returns(name)
       fancy.user_name_downcase.should == 'han solo'      
@@ -167,7 +169,7 @@ describe GetterFor do
     end
     
     it "should work nested" do
-      comment = Comment.new; user = User.new; department = Object.new
+      comment, user, department = Comment.new, User.new, Object.new
       department.expects(:name).returns('Development')
       user.expects(:department).twice().returns(department)
       comment.expects(:user).twice.returns(user)

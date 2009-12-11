@@ -21,7 +21,7 @@ image you have a ticket model that belongs to a user. you can add convenience me
 
 That method returns nil if user is nil, so it can safely used in your views
 
-You can pass multiple key/value pairs separated by comma and provide arrays for both modelname and methodname. let me show you:
+You can pass multiple key/value pairs separated by comma and provide arrays for both model name and method name. let me show you:
 
 <pre>
   class Project < ActiveRecord::Base
