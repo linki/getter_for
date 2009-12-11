@@ -171,7 +171,7 @@ describe GetterFor do
     it "should work nested" do
       comment, user, department = [Comment, User, Object].map(&:new)
       department.expects(:name).returns('Development')
-      user.expects(:department).twice().returns(department)
+      user.expects(:department).twice.returns(department)
       comment.expects(:user).twice.returns(user)
       comment.user_department_name.should == 'Development'      
     end    
