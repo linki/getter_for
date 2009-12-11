@@ -130,19 +130,13 @@ describe GetterFor do
       getter_for :carrier => [:name, :email]
       getter_for [:category, :sender] => :name
       getter_for [:location, :destination] => [:name, :description]
-      def initialize; yield self; end
     end
 
     it "should accept collection of keys and values" do
-      Package.new do |p|
-        p.should respond_to(:carrier_name)
-        p.should respond_to(:carrier_email)
-        p.should respond_to(:category_name)
-        p.should respond_to(:sender_name)
-        p.should respond_to(:location_name)
-        p.should respond_to(:location_description)
-        p.should respond_to(:destination_name)
-        p.should respond_to(:destination_description)
+      package = Package.new
+      [:carrier_name, :carrier_email, :category_name, :sender_name,
+       :location_name, :location_description, :destination_name, :destination_description].each do |attribute|
+         package.should respond_to(attribute)
       end
     end
     
