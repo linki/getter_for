@@ -154,6 +154,25 @@ describe GetterFor do
       name.expects(:downcase).returns('han solo')
       fancy.expects(:user_name).twice.returns(name)
       fancy.user_name_downcase.should == 'han solo'      
+    end
+    
+    class User
+      include GetterFor
+      getter_for :department => :name
+    end
+
+    class Comment
+      include GetterFor
+      getter_for :user => :department_name
+    end
+    
+    it "should work nested" do
+      comment = Comment.new; user = User.new; department = Object.new
+      department.expects(:name).returns('Development')
+      user.expects(:department).twice().returns(department)
+      comment.expects(:user).twice.returns(user)
+      comment.user_department_name.should == 'Development'      
     end    
+    
   end
 end

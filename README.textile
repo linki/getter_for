@@ -21,7 +21,7 @@ image you have a ticket model that belongs to a user. you can add convenience me
 
 That method returns nil if user is nil, so it can safely used in your views
 
-You can pass multiple key, value pairs separated by comma and provide arrays for both modelname and methodname. let me show you:
+You can pass multiple key/value pairs separated by comma and provide arrays for both modelname and methodname. let me show you:
 
 <pre>
   class Project < ActiveRecord::Base
@@ -45,17 +45,17 @@ you can also make fancy stuff like:
 <pre>
   class User < ActiveRecord::Base
     belongs_to :department
+    getter_for :department => :name        # => user.department_name
   end
   
   class Comment < ActiveRecord::Base
     belongs_to :user
-    
-    getter_for :user => :department         # => comment.user_department
-    getter_for :user_department => :name    # => comment.user_department_name
+    getter_for :user => :department_name   # => comment.user_department_name
   end
   
-  @comment = Fancy.new
+  @comment = Comment.new
   @comment.user_department_name    # => @comment.user.department.name if @comment.user && @comment.user.department
 </pre>
+
 
 Copyright (c) 2009 Martin Linkhorst, released under the MIT license.
