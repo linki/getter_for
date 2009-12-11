@@ -23,6 +23,7 @@ Gem::Specification.new do |s|
      "Rakefile",
      "TODO.textile",
      "VERSION",
+     "getter_for.gemspec",
      "lib/getter_for.rb",
      "rails/init.rb",
      "spec/getter_for_spec.rb",
