@@ -2,75 +2,6 @@ require File.join(File.dirname(__FILE__), "/spec_helper")
 
 describe GetterFor do
   describe "getter" do
-    class Model
-      include GetterFor
-    end
-    
-    it "should respond to :getter_for" do
-      Model.should respond_to(:getter_for)
-    end
-    
-    it "should require a parameter" do
-      lambda {
-        Model.send :getter_for
-      }.should raise_error(ArgumentError)
-    end
-
-    it "should require a hash" do
-      lambda {
-        Model.send :getter_for, []
-      }.should raise_error(ArgumentError)
-    end
-    
-    it "should have either a symbol or string or an array of symbols or strings as key" do
-      lambda {
-        Model.send :getter_for, { :attr => :attr }
-      }.should_not raise_error(ArgumentError)      
-
-      lambda {
-        Model.send :getter_for, { 'attr' => :attr }
-      }.should_not raise_error(ArgumentError)      
-
-      lambda {
-        Model.send :getter_for, { [:user, 'category'] => :attr }
-      }.should_not raise_error(ArgumentError)      
-    end
-    
-    it "should raise an error if key is not a symbol, string or array of symbols or strings" do
-      lambda {
-        Model.send :getter_for, { 1 => :attr }
-      }.should raise_error(ArgumentError)
-
-      lambda {
-        Model.send :getter_for, { [:attr, 2] => :attr }
-      }.should raise_error(ArgumentError)
-    end
-    
-    it "should have either a symbol or string or an array of symbols or strings as value" do
-      lambda {
-        Model.send :getter_for, { :attr => 'attr' }
-      }.should_not raise_error(ArgumentError)      
-
-      lambda {
-        Model.send :getter_for, { :attr => :attr }
-      }.should_not raise_error(ArgumentError)      
-
-
-      lambda {
-        Model.send :getter_for, { :attr => [:name, 'synomym'] }
-      }.should_not raise_error(ArgumentError)      
-    end
-    
-    it "should raise an error if value is not a symbol, string or array of symbols or strings" do
-      lambda {
-        Model.send :getter_for, { :attr => 1 }
-      }.should raise_error(ArgumentError)
-
-      lambda {
-        Model.send :getter_for, { :attr => [:attr, 2] }
-      }.should raise_error(ArgumentError)      
-    end
-    
     class Ticket
       include GetterFor
       getter_for :user => :name
@@ -169,6 +100,43 @@ describe GetterFor do
       comment.expects(:user).twice.returns(user)
       comment.user_department_name.should == 'Development'      
     end    
+
+    class Model
+      include GetterFor
+    end
     
+    it "should respond to :getter_for" do
+      Model.should respond_to(:getter_for)
+    end
+    
+    it "should require a parameter" do
+      lambda { Model.send :getter_for }.should raise_error(ArgumentError)
+    end
+
+    it "should require a hash" do
+      lambda { Model.send :getter_for, [] }.should raise_error(ArgumentError)
+    end
+    
+    it "should have either a symbol or string or an array of symbols or strings as key" do
+      lambda { Model.send :getter_for, {  :attr  => :attr             } }.should_not raise_error(ArgumentError)      
+      lambda { Model.send :getter_for, {  'attr' => :attr             } }.should_not raise_error(ArgumentError)      
+      lambda { Model.send :getter_for, { [:user, 'category'] => :attr } }.should_not raise_error(ArgumentError)      
+    end
+    
+    it "should raise an error if key is not a symbol, string or array of symbols or strings" do
+      lambda { Model.send :getter_for, {         1  => :attr } }.should raise_error(ArgumentError)
+      lambda { Model.send :getter_for, { [:attr, 2] => :attr } }.should raise_error(ArgumentError)
+    end
+    
+    it "should have either a symbol or string or an array of symbols or strings as value" do
+      lambda { Model.send :getter_for, { :attr => 'attr'             } }.should_not raise_error(ArgumentError)      
+      lambda { Model.send :getter_for, { :attr => :attr              } }.should_not raise_error(ArgumentError)      
+      lambda { Model.send :getter_for, { :attr => [:name, 'synomym'] } }.should_not raise_error(ArgumentError)      
+    end
+    
+    it "should raise an error if value is not a symbol, string or array of symbols or strings" do
+      lambda { Model.send :getter_for, { :attr => 1          } }.should raise_error(ArgumentError)
+      lambda { Model.send :getter_for, { :attr => [:attr, 2] } }.should raise_error(ArgumentError)      
+    end
   end
 end
