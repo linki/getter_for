@@ -82,7 +82,7 @@ describe GetterFor do
     end
     
     it "should return the user's name" do
-      ticket, user = Ticket.new, Object.new
+      ticket, user = [Ticket, Object].map(&:new)
       user.expects(:name).returns('Han Solo')
       ticket.expects(:user).twice.returns(user)
       ticket.user_name.should == 'Han Solo'      
@@ -95,7 +95,7 @@ describe GetterFor do
     end
     
     it "should raise an error if user does not respond to :name" do
-      ticket, user = Ticket.new, Object.new
+      ticket, user = [Ticket, Object].map(&:new)
       ticket.expects(:user).twice.returns(user)
       lambda {
         ticket.user_name
@@ -108,7 +108,7 @@ describe GetterFor do
     end
 
     it "should accept strings" do
-      product, manufactory = Product.new, Object.new
+      product, manufactory = [Product, Object].map(&:new)
       manufactory.expects(:name).returns('Death Star')
       product.expects(:manufactory).twice.returns(manufactory)
       product.manufactory_name.should == 'Death Star'      
@@ -152,7 +152,7 @@ describe GetterFor do
     end
     
     it "should work fancy" do
-      fancy, name = Fancy.new, Object.new
+      fancy, name = [Fancy, Object].map(&:new)
       name.expects(:downcase).returns('han solo')
       fancy.expects(:user_name).twice.returns(name)
       fancy.user_name_downcase.should == 'han solo'      
@@ -169,7 +169,7 @@ describe GetterFor do
     end
     
     it "should work nested" do
-      comment, user, department = Comment.new, User.new, Object.new
+      comment, user, department = [Comment, User, Object].map(&:new)
       department.expects(:name).returns('Development')
       user.expects(:department).twice().returns(department)
       comment.expects(:user).twice.returns(user)
